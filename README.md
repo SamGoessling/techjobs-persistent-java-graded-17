@@ -60,11 +60,4 @@ Use the checks below to explore the working app.
 1. Create at least two new skills from the form and view the objects in the skill table.
 1. Create a new Job from the form, selecting at least two skills. 
 
-   a. Once created, view the job table and verify that there is an ``employer_id`` column in it. 
-     
-   b. Confirm that a mapped table is present for ``job_skills`` and that at least two rows are now in it
-      for the job just created.
-
-## Submitting Your Work
-
-To submit your work please follow the [Submission Instructions](https://education.launchcode.org/java-web-dev-curriculum/assignments/hello-world/index.html#submitting-your-work-on-canvas)
+   a. Once created, view the je

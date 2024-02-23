@@ -13,13 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Created by LaunchCode
- */
 @Controller
 public class HomeController {
 
@@ -32,15 +28,16 @@ public class HomeController {
     @Autowired
     JobRepository jobRepository;
 
+    //-- displays the main index page with a list of all jobs --//
     @RequestMapping("/")
     public String index(Model model) {
-
         model.addAttribute("title", "MyJobs");
         model.addAttribute("jobs", jobRepository.findAll());
 
         return "index";
     }
 
+    //-- displays the form to add a new job --//
     @GetMapping("add")
     public String displayAddJobForm(Model model) {
         model.addAttribute("title", "Add Job");
@@ -50,22 +47,20 @@ public class HomeController {
         return "add";
     }
 
+    //-- processes the form for adding a new job, validates input --//
     @PostMapping("add")
     public String processAddJobForm(@ModelAttribute @Valid Job newJob,
                                     Errors errors, Model model, @RequestParam int employerId,
                                     @RequestParam List<Integer> skills) {
 
-
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Job");
             return "add";
         } else {
-            Optional optEmployer = employerRepository.findById(employerId);
-
+            Optional<Employer> optEmployer = employerRepository.findById(employerId);
             if (optEmployer.isPresent()) {
-                Employer employer = (Employer) optEmployer.get();
+                Employer employer = optEmployer.get();
                 newJob.setEmployer(employer);
-                model.addAttribute("employer", employer);
             }
 
             List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
@@ -77,15 +72,14 @@ public class HomeController {
         }
     }
 
+    //-- displays details of a single job by ID --//
     @GetMapping("view/{jobId}")
     public String displayViewJob(Model model, @PathVariable int jobId) {
-
-        Optional optJob = jobRepository.findById(jobId);
-        Job job = (Job) optJob.get();
-
-        model.addAttribute("job", job);
-
+        Optional<Job> optJob = jobRepository.findById(jobId);
+        if (optJob.isPresent()) {
+            Job job = optJob.get();
+            model.addAttribute("job", job);
+        }
         return "view";
     }
-
 }

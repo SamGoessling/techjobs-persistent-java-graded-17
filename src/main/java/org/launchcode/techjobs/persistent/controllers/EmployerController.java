@@ -20,18 +20,21 @@ public class EmployerController {
     @Autowired
     EmployerRepository employerRepository;
 
+    //-- maps the base route "/employers" to this method, displaying all employers --//
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("employers", employerRepository.findAll());
         return "employers/index";
     }
 
+    //-- displays form to add a new employer --//
     @GetMapping("add")
     public String displayAddEmployerForm(Model model) {
         model.addAttribute(new Employer());
         return "employers/add";
     }
 
+    //-- processes the form for adding a new employer, validates input --//
     @PostMapping("add")
     public String processAddEmployerForm(@ModelAttribute @Valid Employer newEmployer,
                                          Errors errors, Model model) {
@@ -44,19 +47,19 @@ public class EmployerController {
         }
     }
 
+    //-- displays a single employer details by ID --//
     @GetMapping("view/{employerId}")
     public String displayViewEmployer(Model model, @PathVariable int employerId) {
 
-        Optional optEmployer = employerRepository.findById(employerId);
+        Optional<Employer> optEmployer = employerRepository.findById(employerId);
 
         if (optEmployer.isPresent()) {
-            Employer employer = (Employer) optEmployer.get();
+            Employer employer = optEmployer.get();
             model.addAttribute("employer", employer);
 
             return "employers/view";
         } else {
             return "redirect:../";
         }
-
     }
 }
